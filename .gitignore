@@ -1,0 +1,5 @@
+.idea/
+dependency-reduced-pom.xml
+target/
+.DS_STORE
+.gitattributes
