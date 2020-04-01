@@ -62,13 +62,18 @@ Currently arguments are not supported.
 ---
 
 ### Actions:
-- `permission <permission node>` - Require the sender has `<permission node>` to proceed.
+- `permission <permission node>` - Require the sender has `<permission node>` to proceed. The permission node is the `<value>`.
 - `tell <recipient> <message>` - Send a chat message to `<player(s)>`. 
     - Applicable `<recipient>` variables: `sender`, `player`, `all`.
 - `give <recipient> <quantity> <item>` - Give `<player(s)>` an item.
     - Applicable `<recipient>` variables: `sender`, `player`, `all`.
-    - `quantity` needs to be a positive integer.
+    - `<quantity>` needs to be a positive integer.
     - `<item>` needs to be a [Minecraft Item Name](https://minecraft-ids.grahamedgecombe.com/), **not** item ID.
+- `teleport <recipient> <x> <y> <z> <world> - Teleport `<recipient>` to a location.
+    - Applicable `<recipient>` variables: `sender`, `player`, `all`.
+- `execute <recipient> <command>` - Forces `<recipient>` to run `<command>` command.
+    - Applicable `<recipient>` variables: `sender`, `player`, `all`.
+    - If `<recipient>` does not have `<command>` permission, or any other sort of error, they will see the error message as normal. This is not "ghost".    
 
 ### Events:
 - `join` - When a `player` joins the server.
@@ -98,7 +103,8 @@ Currently arguments are not supported.
 
 ## Tips and Tricks
 
-- ezDev does not care about indentation/lines, though I do recommend using it so your code is more readable.
+- ezDev does not care about indentation, though I do recommend using it so your code is more readable.
+- ezDev does care about line breaks, and your scripts will not work unless each action has its own line. This will hopefully be temporary.
 - ezDev will be compatible with VaultAPI variables.
 
 ---
@@ -108,30 +114,30 @@ Currently arguments are not supported.
 Simple Command
 ```
 command hi:
-    tell sender: "Hello " + sender + "!"
+    tell sender "Hello " + sender + "!"
     teleport sender: 73, 14, -143
 end
 ```
-Survival Games Command
+Survival Games Command - By using the custom variable 'sv_games_spawns', a random location from the list will be chosen.
 ```
 command sv:
     permission "surivalgames.join"
-    teleport sender: 'sv_games_spawn'
-    tell sender: "The game starts in 1 minute."
+    teleport sender 'sv_games_spawns'
+    tell sender "The game starts in 1 minute."
 end
 ```
 Join Listener
 ```
 listener join:
-    tell all: player + " has joined " + 'server_info.name' + "!"
-    give player: 5 diamond_ore
+    tell all player + " has joined " + 'server_info.name' + "!"
+    give player 5 diamond_ore
     teleport player: 'spawn'
 end
 ```
 Website Broadcast Runnable
 ```
 repeat 5m:
-    tell all: "Check out our website: " + 'server_info.website'
+    tell all "Check out our website: " + 'server_info.website'
 end
 ```
 

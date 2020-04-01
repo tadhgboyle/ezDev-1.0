@@ -2,3 +2,7 @@ name: ezDev
 main: me.aberdeener.ezdev.ezDev
 version: 0.0.1
 api-version: 1.15
+commands:
+  ezDev:
+    description: Main command for ezDev Plugin
+    aliases: [ezdev]

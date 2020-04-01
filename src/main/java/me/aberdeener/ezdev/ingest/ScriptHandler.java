@@ -2,6 +2,7 @@ package me.aberdeener.ezdev.ingest;
 
 import lombok.Getter;
 import me.aberdeener.ezdev.ezDev;
+import me.aberdeener.ezdev.utils.Exceptions;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -33,6 +34,7 @@ public class ScriptHandler {
             }
         } catch (Exception e) {
             e.printStackTrace();
+            return;
         }
 
         /*
@@ -52,14 +54,19 @@ public class ScriptHandler {
                     case "repeat":
                         RunnableCreator.createRunnable(token);
                         break;
+                    default:
+                        logger.severe("Invalid action " + token);
+                        return;
                 }
             }
         }
+        ezDev.getActiveScripts().add(script.getName());
     }
 
     private static List<String> headers = Arrays.asList("command", "listener", "repeat");
 
     // Verifies the token is one of the three header types, and that the next token ends with a colon
+    // TODO: Check if last token is "end" or last token is null.
     private static boolean verifyHeader(int position) {
         String token = tokens.get(position);
         String nextToken = tokens.get(position + 1);

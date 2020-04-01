@@ -1,19 +1,21 @@
 package me.aberdeener.ezdev;
 
 import lombok.Getter;
-import me.aberdeener.ezdev.listeners.CommandListener;
-import me.aberdeener.ezdev.variables.VariableManager;
-import org.bukkit.Bukkit;
-import org.bukkit.plugin.java.JavaPlugin;
 import me.aberdeener.ezdev.ingest.ScriptHandler;
+import me.aberdeener.ezdev.variables.VariableManager;
+import org.bukkit.plugin.java.JavaPlugin;
 
 import java.io.File;
+import java.util.ArrayList;
+import java.util.List;
 
 public class ezDev extends JavaPlugin {
 
     @Getter
     public static ezDev instance;
     private static long startTime;
+    @Getter
+    public static List<String> activeScripts = new ArrayList<>();
 
     File scriptFolder = new File(getDataFolder() + File.separator + "scripts");
 

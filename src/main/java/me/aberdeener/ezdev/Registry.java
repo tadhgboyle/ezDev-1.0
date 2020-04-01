@@ -7,10 +7,10 @@ public class Registry {
     public static ezDev ezDev = me.aberdeener.ezdev.ezDev.getInstance();
 
     public static void registerCommands() {
-
+        ezDev.getCommand("ezDev").setExecutor(new ezDevCommand());
     }
 
     public static void registerListeners() {
-        ezDev.getServer().getPluginManager().registerEvents(new CommandListener(null), ezDev);
+        ezDev.getServer().getPluginManager().registerEvents(new CommandListener(""), ezDev);
     }
 }
