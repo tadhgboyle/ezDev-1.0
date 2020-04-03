@@ -43,7 +43,7 @@ public class ezDev extends JavaPlugin {
                     getLogger().info("Loading script " + script.getName() + "...");
                     ScriptHandler.handle(script);
                 } else {
-                    getLogger().warning("Skipped script "  + script.getName() + ": Incorrect file extension (.ez)");
+                    getLogger().warning("Skipped script "  + script.getName() + ": Incorrect file extension.");
                 }
             }
             getLogger().info("Started in " + (System.currentTimeMillis() - startTime) + "ms!");

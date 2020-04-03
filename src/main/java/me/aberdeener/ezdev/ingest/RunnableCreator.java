@@ -8,7 +8,7 @@ import java.util.logging.Logger;
 public class RunnableCreator {
 
     private static Logger logger = ezDev.getInstance().getLogger();
-    private static HashMap<Integer, String> tokens = ScriptHandler.getTokens();
+    private static HashMap<Integer, String> tokens = ScriptHandler.getScript_lines();
 
     public static void createRunnable(String token) {
         String timeout = tokens.get(tokens.get(token) + 1);

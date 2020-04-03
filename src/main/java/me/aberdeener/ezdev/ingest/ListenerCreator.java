@@ -8,7 +8,7 @@ import java.util.logging.Logger;
 public class ListenerCreator {
 
     private static Logger logger = ezDev.getInstance().getLogger();
-    private static HashMap<Integer, String> tokens = ScriptHandler.getTokens();
+    private static HashMap<Integer, String> tokens = ScriptHandler.getScript_lines();
 
     public static void createListener(int position) {
         String event = tokens.get(position + 1);
