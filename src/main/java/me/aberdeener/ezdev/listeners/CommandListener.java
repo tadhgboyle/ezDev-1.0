@@ -137,14 +137,14 @@ public class CommandListener extends Command implements Listener {
                         quantity = Integer.valueOf(currentLineTokens.get(3));
                     } catch (Exception e) {
                         // Thrown when quantity is not a #
-                        Exceptions.invalidValue(sender, "give", currentLineTokens.get(3), command);
+                        Exceptions.invalidNumber(sender, "give", currentLineTokens.get(3), command);
                         return false;
                     }
                     String item = currentLineTokens.get(4);
                     if (target.equals("sender"))
                         sender.getInventory().addItem(new ItemStack(Material.getMaterial(item), quantity));
                     else if (target.equals("all")) for (Player players : Bukkit.getOnlinePlayers())
-                        sender.getInventory().addItem(new ItemStack(Material.getMaterial(item), quantity));
+                        players.getInventory().addItem(new ItemStack(Material.getMaterial(item), quantity));
                     else {
                         Exceptions.invalidTarget(sender, "command", "give", value);
                         return false;

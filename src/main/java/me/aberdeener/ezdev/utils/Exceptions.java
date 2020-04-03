@@ -28,4 +28,9 @@ public class Exceptions {
         logger.severe(message);
         sender.sendMessage(ChatColor.DARK_RED + message);
     }
+    public static void invalidNumber(CommandSender sender, String action, String value, String header) {
+        String message = "Number for " + action + " " + value + ", for " + header + " is not valid.";
+        logger.severe(message);
+        sender.sendMessage(ChatColor.DARK_RED + message);
+    }
 }
