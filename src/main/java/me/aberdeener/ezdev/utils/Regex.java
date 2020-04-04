@@ -8,4 +8,6 @@ public class Regex {
 
     public static Pattern ALPHA_NUM = Pattern.compile("^[a-zA-Z0-9]+$");
 
+    public static Pattern VARIABLE_BRACKETS = Pattern.compile("\\{(.*?)}");
+
 }

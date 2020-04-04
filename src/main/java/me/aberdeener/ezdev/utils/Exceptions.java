@@ -33,4 +33,9 @@ public class Exceptions {
         logger.severe(message);
         sender.sendMessage(ChatColor.DARK_RED + message);
     }
+    public static void invalidLocation(CommandSender sender, String action, String trigger, String header) {
+        String message = "Location for " + action + " " + trigger + " is invalid  at header " + header;
+        logger.severe(message);
+        sender.sendMessage(ChatColor.DARK_RED + message);
+    }
 }

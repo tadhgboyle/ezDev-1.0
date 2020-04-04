@@ -5,10 +5,9 @@ import me.aberdeener.ezdev.ingest.CommandCreator;
 import me.aberdeener.ezdev.ingest.ScriptHandler;
 import me.aberdeener.ezdev.utils.Exceptions;
 import me.aberdeener.ezdev.utils.Regex;
+import me.aberdeener.ezdev.variables.VariableManager;
 import org.apache.commons.collections4.bidimap.TreeBidiMap;
-import org.bukkit.Bukkit;
-import org.bukkit.ChatColor;
-import org.bukkit.Material;
+import org.bukkit.*;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.command.ConsoleCommandSender;
@@ -17,6 +16,7 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerCommandPreprocessEvent;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.World;
 
 import java.util.HashMap;
 import java.util.logging.Logger;
@@ -85,12 +85,13 @@ public class CommandListener extends Command implements Listener {
             StringBuilder value_assembler = new StringBuilder();
             // Now assemble the value. We need everything after the action
             for (String token : currentLineTokens.values()) {
-                // Check what happens with duplicate tokens (tell sender "hello there there sir"
+                // TODO: Check what happens with duplicate tokens (tell sender "hello there there sir")
                 if (currentLineTokens.getKey(token) >= 3) {
+                    if (VariableManager.isVariable(token)) token = VariableManager.getVariable(token);
                     value_assembler.append(token + " ");
                 }
             }
-            String value = value_assembler.toString();
+            String value = value_assembler.toString().trim();
 
             /* Debugging:
             logger.info("action: " + action);
@@ -100,14 +101,15 @@ public class CommandListener extends Command implements Listener {
 
             Matcher matcher = Regex.ACTION_QUOTES.matcher(value);
 
-            String substring = ChatColor.translateAlternateColorCodes('&', value.substring(1, value.length() - 2));
+            // TODO: Move this to ActionHandler.class
+
+            // Remove quotes and get chatcolours
+            String message = ChatColor.translateAlternateColorCodes('&', value.substring(1, value.endsWith("\"") ? value.length() - 1 : value.length()));
             switch (action) {
                 case "permission":
                     if (matcher.matches()) {
-                        value = substring;
-                        if (sender.hasPermission(value)) {
-                            logger.info(sender.getName() + " has permission " + value);
-                        } else {
+                        value = message;
+                        if (!sender.hasPermission(value)) {
                             sender.sendMessage(Bukkit.getPermissionMessage());
                             return false;
                         }
@@ -118,12 +120,12 @@ public class CommandListener extends Command implements Listener {
                     break;
                 case "tell":
                     if (matcher.matches()) {
-                        value = substring;
+                        value = message;
                         if (target.equals("sender")) sender.sendMessage(value);
                         else if (target.equals("all"))
                             for (Player players : Bukkit.getOnlinePlayers()) players.sendMessage(value);
                         else {
-                            Exceptions.invalidTarget(sender, "command", "tell", value);
+                            Exceptions.invalidTarget(sender, "command", "tell", target);
                             return false;
                         }
                     } else {
@@ -134,9 +136,8 @@ public class CommandListener extends Command implements Listener {
                 case "give":
                     int quantity;
                     try {
-                        quantity = Integer.valueOf(currentLineTokens.get(3));
+                        quantity = Integer.parseInt(currentLineTokens.get(3));
                     } catch (Exception e) {
-                        // Thrown when quantity is not a #
                         Exceptions.invalidNumber(sender, "give", currentLineTokens.get(3), command);
                         return false;
                     }
@@ -146,7 +147,32 @@ public class CommandListener extends Command implements Listener {
                     else if (target.equals("all")) for (Player players : Bukkit.getOnlinePlayers())
                         players.getInventory().addItem(new ItemStack(Material.valueOf(item), quantity));
                     else {
-                        Exceptions.invalidTarget(sender, "command", "give", value);
+                        Exceptions.invalidTarget(sender, "command", "give", target);
+                        return false;
+                    }
+                    break;
+                case "teleport":
+                    // TODO: Test this...
+                    long x;
+                    long y;
+                    long z;
+                    World world;
+                    try {
+                        x = Long.parseLong(currentLineTokens.get(3));
+                        y = Long.parseLong(currentLineTokens.get(4));
+                        z = Long.parseLong(currentLineTokens.get(5));
+                        if (currentLineTokens.get(6) == null) world = sender.getWorld();
+                        else world = Bukkit.getWorld(currentLineTokens.get(6));
+                    } catch (Exception e) {
+                        Exceptions.invalidLocation(sender, "command", command, "teleport");
+                        return false;
+                    }
+                    Location location = new Location(world, x, y, z);
+                    if (target.equals("sender")) sender.teleport(location);
+                    else if (target.equals("all"))
+                        for (Player players : Bukkit.getOnlinePlayers()) players.teleport(location);
+                    else {
+                        Exceptions.invalidTarget(sender, "command", "teleport", target);
                         return false;
                     }
                     break;

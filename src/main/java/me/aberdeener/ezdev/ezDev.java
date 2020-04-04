@@ -13,7 +13,7 @@ public class ezDev extends JavaPlugin {
 
     @Getter
     public static ezDev instance;
-    private static long startTime;
+    long startTime;
     @Getter
     public static List<String> activeScripts = new ArrayList<>();
 
@@ -29,11 +29,10 @@ public class ezDev extends JavaPlugin {
         VariableManager.initVariables();
         Registry.registerListeners();
         Registry.registerCommands();
+        getLogger().info("Started in " + (System.currentTimeMillis() - startTime) + "ms!");
     }
     public void onDisable() {
     }
-
-    // TODO: Tomorrow! Move execute() to CommandHandler class so that it is not called twice.
 
     private void initScripts() {
         getLogger().info("Pre-loading user scripts...");
@@ -46,7 +45,6 @@ public class ezDev extends JavaPlugin {
                     getLogger().warning("Skipped script "  + script.getName() + ": Incorrect file extension.");
                 }
             }
-            getLogger().info("Started in " + (System.currentTimeMillis() - startTime) + "ms!");
         } catch (Exception e) {
             e.printStackTrace();
             getLogger().severe("Fatal error pre-loading user scripts.");

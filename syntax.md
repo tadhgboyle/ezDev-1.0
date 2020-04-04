@@ -82,7 +82,7 @@ Currently arguments are not supported.
 
 ### Custom Variables:
 - Create in variables.json
-- To use a custom variable, wrap it in single quotes. See Examples section if you need help.
+- To use a custom variable, wrap it in curly braces. See Examples section if you need help.
 - Examples:
 ```json
 {
@@ -122,22 +122,22 @@ Survival Games Command - By using the custom variable 'sv_games_spawns', a rando
 ```
 command sv:
     permission "surivalgames.join"
-    teleport sender 'sv_games_spawns'
+    teleport sender {sv_games_spawns}
     tell sender "The game starts in 1 minute."
 end
 ```
 Join Listener
 ```
 listener join:
-    tell all player + " has joined " + 'server_info.name' + "!"
+    tell all player + " has joined " + {server_info.name} + "!"
     give player 5 diamond_ore
-    teleport player: 'spawn'
+    teleport player: {spawn}
 end
 ```
 Website Broadcast Runnable
 ```
 repeat 5m:
-    tell all "Check out our website: " + 'server_info.website'
+    tell all "Check out our website: " + {server_info.website}
 end
 ```
 
